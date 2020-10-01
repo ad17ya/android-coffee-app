@@ -3,8 +3,10 @@ package com.example.justjava;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -13,7 +15,8 @@ import java.text.NumberFormat;
 
 public class MainActivity extends AppCompatActivity {
 
-    int cupsOfCoffee=0;
+    int cupsOfCoffee = 0;
+    int total_price = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +25,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submitOrder(View view) {
-        String name = "Aditya";
-        if (whippedCream())
-        int price = cupsOfCoffee * 20;
-        String priceS = "" + NumberFormat.getCurrencyInstance().format(price);
-        String summary = "Name = " +name + "\nQuantity = "+ cupsOfCoffee + "\nTotal = " + priceS + "\nThanks!" ;
+        String name = getName();
+
+        CheckBox whippedCream = (CheckBox) findViewById(R.id.whipped_checkbox);
+        boolean whipped_boolean = whippedCream.isChecked();
+        Log.v("MainActivity", "has whipped cream" + whipped_boolean);
+
+        CheckBox chocoTopping = (CheckBox) findViewById(R.id.choco_topping);
+        boolean choco_toppping = chocoTopping.isChecked();
+        Log.v("MainActivity", "has choco toppping" + choco_toppping);
+
+        total_price = priceCalculator(cupsOfCoffee, whipped_boolean, choco_toppping);
+
+        String priceS = "" + NumberFormat.getCurrencyInstance().format(total_price);
+        String whipped = "" + "\nHas whipped cream ? " + whipped_boolean;
+        String chocoed = "" + "\nHas choco ? " + choco_toppping;
+        String summary = "Name = " + name + "\nQuantity = " + cupsOfCoffee + whipped + chocoed + "\nTotal = " + priceS + "\nThanks!";
         displayMessage(summary);
     }
 
-    public void displayMessage(String message){
+    public int priceCalculator(int totalCups, boolean whipped_cream, boolean choco_topping) {
+        int price = 0;
+        price = totalCups * 20;
+        if (whipped_cream) {
+            price = price + totalCups * 10;
+        }
+        if (choco_topping) {
+            price = price + totalCups * 10;
+        }
+
+        return price;
+    }
+
+    public String getName() {
+        EditText text = (EditText) findViewById(R.id.customer_name);
+        String name = text.getText().toString();
+        //Log.v("Main Activity", "Getting the user name");
+        return name;
+    }
+
+    public void displayMessage(String message) {
         TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
         priceTextView.setText(message);
     }
@@ -53,14 +87,4 @@ public class MainActivity extends AppCompatActivity {
         displayQuantity(cupsOfCoffee);
     }
 
-    public boolean whippedCream(View view){
-        boolean whipped = ((CheckBox) view).isChecked();
-
-        if (whipped){
-            return true;
-        }
-        else
-            return false;
-
-    }
 }
