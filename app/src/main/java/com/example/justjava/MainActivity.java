@@ -2,6 +2,8 @@ package com.example.justjava;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,13 +37,25 @@ public class MainActivity extends AppCompatActivity {
         boolean choco_toppping = chocoTopping.isChecked();
         Log.v("MainActivity", "has choco toppping" + choco_toppping);
 
+
         total_price = priceCalculator(cupsOfCoffee, whipped_boolean, choco_toppping);
 
         String priceS = "" + NumberFormat.getCurrencyInstance().format(total_price);
         String whipped = "" + "\nHas whipped cream ? " + whipped_boolean;
         String chocoed = "" + "\nHas choco ? " + choco_toppping;
         String summary = "Name = " + name + "\nQuantity = " + cupsOfCoffee + whipped + chocoed + "\nTotal = " + priceS + "\nThanks!";
+
         displayMessage(summary);
+
+        /*
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, "Starducks order for " + name);
+        intent.putExtra(Intent.EXTRA_TEXT, "" + summary);
+        if(intent.resolveActivity(getPackageManager()) != null ){
+            startActivity(intent);
+        }
+         */
     }
 
     public int priceCalculator(int totalCups, boolean whipped_cream, boolean choco_topping) {
